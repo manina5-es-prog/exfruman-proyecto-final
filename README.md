@@ -4,6 +4,7 @@ Prototipo académico que compara la producción real de cajas de plátano con pr
 
 ## Demo pública
 
+- [Tablero en Vercel](https://exfruman-proyecto-final.vercel.app/).
 - [Tablero en Render](https://exfruman-proyecto-final-api.onrender.com/).
 - [Swagger UI](https://exfruman-proyecto-final-api.onrender.com/docs).
 

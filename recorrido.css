@@ -1,0 +1,82 @@
+.recorrido { margin-bottom: 16px; overflow: hidden; }
+.recorrido-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px;
+}
+.recorrido-cabecera h2 { font-size: 1.26rem; font-weight: 800; }
+.recorrido-cabecera p { color: #456557; font-size: .88rem; }
+.recorrido-estaciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 16px 14px;
+}
+.recorrido-estaciones button { background: #edf4eb; color: #235644; font-size: .83rem; }
+.recorrido-estaciones button:hover { background: #dcebdd; }
+.recorrido-estaciones button[aria-pressed="true"] { background: #236046; color: white; }
+.recorrido-cuerpo {
+  display: grid;
+  grid-template-columns: minmax(0, 2.25fr) minmax(0, 1fr);
+  border-top: 1px solid #dce6d8;
+}
+.recorrido-vista { position: relative; background: #14382f; color: #f2fbf5; }
+.recorrido-lienzo { height: clamp(405px, 47vw, 550px); }
+.recorrido-lienzo canvas { width: 100%; height: 100%; display: block; cursor: grab; touch-action: none; }
+.recorrido-lienzo canvas:active { cursor: grabbing; }
+.recorrido-lienzo canvas:focus-visible { outline: 3px solid #b7e57e; outline-offset: -3px; }
+.recorrido-oculto { display: none; }
+.recorrido-indicaciones {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.recorrido-indicaciones span, .recorrido-indicaciones button, .recorrido-movimiento button {
+  background: #14382fee;
+  border: 1px solid #83ad9a;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: .77rem;
+}
+.recorrido-indicaciones button { min-height: 36px; }
+.recorrido-movimiento {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 44px);
+  gap: 4px;
+}
+.recorrido-movimiento button { touch-action: none; padding: 0; font-size: 1.15rem; }
+.recorrido-movimiento button:first-child { grid-column: 2; }
+.recorrido-movimiento button:nth-child(2) { grid-column: 1; }
+.recorrido-interactuar { position: absolute; bottom: 14px; right: 12px; background: #14382f; border: 1px solid #83ad9a; padding: 6px 11px; font-size: .79rem; }
+.recorrido kbd { font-weight: 800; font-family: inherit; }
+.recorrido-interactuar kbd { color: #c5eb87; margin-right: 4px; }
+.recorrido-aviso { padding: 18px; }
+.recorrido-panel { padding: 17px; display: grid; align-content: start; gap: 12px; background: #fbfcfa; }
+.recorrido-panel h3 { font-size: 1.05rem; font-weight: 800; }
+.recorrido-panel p { color: #38594c; font-size: .87rem; }
+.recorrido-panel .filtros { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 10px; gap: 8px; }
+.recorrido-panel .filtros label:first-child, .recorrido-panel .filtros button { grid-column: 1 / -1; }
+.recorrido-panel .recorrido-datos { grid-template-columns: 1fr; margin: 0 0 8px; gap: 8px; }
+.recorrido-panel .recorrido-datos div { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.recorrido-panel .recorrido-datos dd { text-align: right; }
+@media (max-width: 760px) {
+  .recorrido-cuerpo { grid-template-columns: minmax(0, 1fr); }
+  .recorrido-lienzo { height: clamp(330px, 87vw, 460px); }
+  .recorrido-panel { border-top: 1px solid #dce6d8; }
+}
+@media (max-width: 380px) {
+  .recorrido-movimiento { grid-template-columns: repeat(3, 38px); }
+  .recorrido-interactuar { padding-inline: 7px; }
+}

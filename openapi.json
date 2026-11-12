@@ -1,0 +1,60 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API de EXFRUMAN",
+    "version": "1.0.0",
+    "description": "Consulta de cajas de plátano por empacadora y semana ISO. El entorno académico usa datos ficticios."
+  },
+  "paths": {
+    "/api/comparacion": {
+      "get": {
+        "summary": "Compara la producción semanal con el pronóstico",
+        "parameters": [
+          {"name":"codigo","in":"query","required":true,"schema":{"type":"string","enum":["E01","E02"],"default":"E01"}},
+          {"name":"anio","in":"query","required":true,"schema":{"type":"integer","minimum":2000,"maximum":2099,"default":2026}},
+          {"name":"semana","in":"query","required":true,"description":"Semana ISO. La semana 53 depende del año.","schema":{"type":"integer","minimum":1,"maximum":53,"default":35}}
+        ],
+        "responses": {
+          "200": {
+            "description": "Pronóstico encontrado. Los campos de producción y diferencia admiten null cuando falta el dato real.",
+            "content": {
+              "application/json": {
+                "schema": {"$ref":"#/components/schemas/Comparacion"},
+                "examples": {
+                  "completa": {"value":{"codigo":"E01","anio":2026,"semana":35,"cajas_reales":1200,"cajas_pronosticadas":1250,"diferencia":-50}},
+                  "pendiente": {"value":{"codigo":"E01","anio":2026,"semana":36,"cajas_reales":null,"cajas_pronosticadas":1280,"diferencia":null}}
+                }
+              }
+            }
+          },
+          "404": {"description":"No hay pronóstico para el periodo.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"}}}},
+          "422": {"description":"Selección inválida.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"}}}},
+          "503": {"description":"Fuente de datos temporalmente no disponible.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"}}}}
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Comprueba que el proceso HTTP está activo",
+        "responses":{"200":{"description":"El servidor responde.","content":{"application/json":{"schema":{"type":"object","required":["estado"],"properties":{"estado":{"type":"string","enum":["ok"]}}}}}}}
+      }
+    }
+  },
+  "components":{
+    "schemas":{
+      "Comparacion":{
+        "type":"object",
+        "required":["codigo","anio","semana","cajas_reales","cajas_pronosticadas","diferencia"],
+        "properties":{
+          "codigo":{"type":"string"},
+          "anio":{"type":"integer"},
+          "semana":{"type":"integer"},
+          "cajas_reales":{"type":"integer","nullable":true,"minimum":0},
+          "cajas_pronosticadas":{"type":"integer","minimum":0},
+          "diferencia":{"type":"integer","nullable":true,"description":"Cajas reales menos cajas pronosticadas."}
+        }
+      },
+      "Error":{"type":"object","required":["detalle"],"properties":{"detalle":{"type":"string"}}}
+    }
+  }
+}

@@ -12,8 +12,17 @@ if (DATABASE_URL !== undefined && !DATABASE_URL.trim()) {
   throw new Error('DATABASE_URL está definida pero vacía.');
 }
 
+// La cadena de Supabase se mantiene como secreto de entorno. El certificado se
+// carga por separado para que Node valide el servidor también en Render.
+const conexionSegura = DATABASE_URL ? new URL(DATABASE_URL) : null;
+conexionSegura?.searchParams.delete('sslmode');
+conexionSegura?.searchParams.delete('sslrootcert');
+const certificado = conexionSegura
+  ? await readFile(process.env.DATABASE_CA_PATH || '/etc/secrets/supabase-ca.crt', 'utf8')
+  : null;
 const pool = DATABASE_URL ? new pg.Pool({
-  connectionString: DATABASE_URL,
+  connectionString: conexionSegura.toString(),
+  ssl: {ca: certificado, rejectUnauthorized: true},
   max: 5,
   connectionTimeoutMillis: 5000,
   statement_timeout: 5000,
@@ -28,4 +37,3 @@ export async function buscarComparacion(codigo, anio, semana) {
   }
   return registros.find((fila) => fila.codigo === codigo && fila.anio === anio && fila.semana === semana);
 }
-

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {lazy, Suspense, useEffect, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import './styles.css';
 
@@ -10,6 +10,17 @@ const campos = [
   ['cajas_pronosticadas', 'Pronóstico', 'Estimación semanal'],
   ['diferencia', 'Diferencia', 'Real menos pronóstico'],
 ];
+const Recorrido = lazy(() => import('./recorrido.jsx'));
+
+function Filtros({valores, actualizar, consultar, enOficina = false}) {
+  return <form className="panel filtros" aria-label={enOficina ? 'Consulta en la oficina' : 'Consulta semanal'}
+    onSubmit={(event) => {event.preventDefault(); consultar(valores);}}>
+    <label>Empacadora<select name="codigo" value={valores.codigo} onChange={actualizar}><option>E01</option><option>E02</option></select></label>
+    <label>Año<input name="anio" type="number" min="2000" max="2099" required value={valores.anio} onChange={actualizar}/></label>
+    <label>Semana ISO<input name="semana" type="number" min="1" max="53" required value={valores.semana} onChange={actualizar}/></label>
+    <button type="submit">Consultar</button>
+  </form>;
+}
 
 function Grafico({fila}) {
   const lienzo = useRef(null);
@@ -53,6 +64,8 @@ function App() {
   const [filtros, setFiltros] = useState(inicial);
   const [consulta, setConsulta] = useState({tipo: 'carga', filtros: inicial});
   const [verGrafico, setVerGrafico] = useState(false);
+  const [verRecorrido, setVerRecorrido] = useState(false);
+  const abrirRecorrido = useRef(null);
   const pendiente = useRef(null);
 
   async function consultar(valores) {
@@ -86,12 +99,16 @@ function App() {
         <h1>Producción semanal</h1>
         <p>Compara las cajas de plátano producidas con el pronóstico de cada empacadora.</p>
       </section>
-      <form className="panel filtros" onSubmit={(event) => {event.preventDefault(); consultar(filtros);}}>
-        <label>Empacadora<select name="codigo" value={filtros.codigo} onChange={actualizar}><option>E01</option><option>E02</option></select></label>
-        <label>Año<input name="anio" type="number" min="2000" max="2099" required value={filtros.anio} onChange={actualizar}/></label>
-        <label>Semana ISO<input name="semana" type="number" min="1" max="53" required value={filtros.semana} onChange={actualizar}/></label>
-        <button type="submit">Consultar</button>
-      </form>
+      <button type="button" ref={abrirRecorrido} aria-expanded={verRecorrido} style={{marginBottom: 14}}
+        onClick={() => setVerRecorrido((abierto) => !abierto)}>
+        {verRecorrido ? 'Ocultar recorrido 3D' : 'Recorrer la empacadora en 3D'}
+      </button>
+      {verRecorrido && <Suspense fallback={<p role="status">Cargando recorrido…</p>}>
+        <Recorrido consulta={consulta} numero={numero}
+          filtros={<Filtros valores={filtros} actualizar={actualizar} consultar={consultar} enOficina />}
+          cerrar={() => {setVerRecorrido(false); abrirRecorrido.current?.focus();}} />
+      </Suspense>}
+      <Filtros valores={filtros} actualizar={actualizar} consultar={consultar} />
       <section aria-live="polite" aria-busy={tipo === 'carga'}>
         <p className="periodo">{seleccion.codigo} · Año {seleccion.anio} · Semana {seleccion.semana}</p>
         {tipo === 'carga' && <p className="panel mensaje">Cargando consulta…</p>}

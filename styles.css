@@ -24,7 +24,75 @@ button:hover{background:#163b30}
 .detalle{margin-top:15px;padding:16px}.detalle-cabecera{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.detalle h2{font-size:1.18rem;font-weight:800}
 .secundario{color:#236046;background:#eef4ec;border:1px solid #c6dbc9}.secundario:hover{background:#dcebdd}
 dl{display:grid;grid-template-columns:repeat(3,1fr);margin:12px 0 0;gap:12px;border-top:1px solid #dce6d8;padding-top:10px}dt{color:#50665a;font-size:.83rem}dd{font-weight:800}
-.scene{margin-top:15px;overflow:hidden;border-radius:12px;background:#edf4ee}.scene p{padding:8px;font-size:.8rem;color:#38594c}
+.scene {
+  margin-top: 15px;
+  border: 1px solid #315748;
+  border-radius: 14px;
+  background: #112c26;
+  color: #eef7ed;
+  overflow: hidden;
+}
+.scene-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #315748;
+  background: #183b30;
+}
+.scene-leyenda, .scene-controles {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.scene-leyenda li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .83rem;
+}
+.scene-leyenda span {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: #30c494;
+}
+.scene-leyenda li:last-child span { background: #d3e870; }
+.scene-controles { gap: 6px; }
+.scene-controles button {
+  background: #234b3e;
+  border: 1px solid #5b8272;
+  border-radius: 7px;
+  padding: 6px 10px;
+  min-width: 42px;
+  min-height: 38px;
+  font-size: .8rem;
+}
+.scene-controles button:hover { background: #356451; }
+.scene-lienzo { height: clamp(320px, 47vw, 440px); }
+.scene-lienzo canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+.scene-lienzo canvas:active { cursor: grabbing; }
+.scene :focus-visible { outline: 2px solid #d3e870; outline-offset: -3px; }
+.scene-oculta { display: none; }
+.scene p {
+  padding: 10px 14px;
+  color: #d2e5da;
+  font-size: .8rem;
+}
+.scene-ayuda {
+  display: grid;
+  gap: 3px;
+  border-top: 1px solid #315748;
+  background: #183b30;
+}
 .mensaje{padding:18px}footer{font-size:.79rem;margin:21px 0}
 @media(max-width:620px){.intro{padding-top:25px}.filtros{grid-template-columns:1fr 1fr}.filtros label:first-child,.filtros button{grid-column:span 2}.shell{width:calc(100% - 24px)}}
 @media(max-width:380px){dl{grid-template-columns:1fr}.tag{font-size:.61rem}}

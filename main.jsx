@@ -14,20 +14,38 @@ const campos = [
 function Grafico({fila}) {
   const lienzo = useRef(null);
   const [estado, setEstado] = useState('cargando');
+  const [controles, setControles] = useState(null);
   useEffect(() => {
     let cancelado = false;
     let limpiar = () => {};
     import('./grafico.mjs').then(({dibujar}) => {
       if (cancelado) return;
-      limpiar = dibujar(lienzo.current, [fila.cajas_reales, fila.cajas_pronosticadas]);
+      limpiar = dibujar(lienzo.current, [fila.cajas_reales, fila.cajas_pronosticadas], setControles);
       setEstado('listo');
     }).catch(() => {if (!cancelado) setEstado('error');});
     return () => {cancelado = true; limpiar();};
   }, [fila]);
   return <div className="scene">
-    <div ref={lienzo} aria-hidden="true" />
-    {estado === 'error' && <p>El gráfico 3D no está disponible. Consulta los valores en la tabla.</p>}
-    {estado !== 'error' && <p>Verde oscuro: real · Verde claro: pronóstico · Base común en cero</p>}
+    {estado === 'listo' && <div className="scene-barra">
+      <ul className="scene-leyenda" aria-label="Series del gráfico">
+        <li><span aria-hidden="true" /> Reales <strong>{numero(fila.cajas_reales)}</strong></li>
+        <li><span aria-hidden="true" /> Pronóstico <strong>{numero(fila.cajas_pronosticadas)}</strong></li>
+      </ul>
+      {controles && <div className="scene-controles" role="group" aria-label="Controles del gráfico 3D">
+        <button type="button" onClick={() => controles.vista('frente')}>Vista frontal</button>
+        <button type="button" onClick={() => controles.vista('orbital')}>Restablecer vista</button>
+        <button type="button" aria-label="Acercar" onClick={() => controles.zoom(0.8)}>+</button>
+        <button type="button" aria-label="Alejar" onClick={() => controles.zoom(1.25)}>−</button>
+      </div>}
+    </div>}
+    <div ref={lienzo} className={estado === 'error' ? 'scene-oculta' : 'scene-lienzo'} />
+    {estado === 'cargando' && <p>Cargando gráfico 3D…</p>}
+    {estado === 'error' && <p>El gráfico 3D no está disponible. Puedes consultar los valores en el detalle.</p>}
+    {controles && estado === 'listo' && <p className="scene-ayuda">
+      <span>Ratón: arrastra para girar, usa la rueda para acercar y arrastra con clic derecho para desplazar.</span>
+      <span>Táctil: gira con un dedo. Pellizca o arrastra con dos dedos para acercar o desplazar.</span>
+      <span>Teclado: enfoca la escena y usa las flechas para desplazar. Mantén Mayús para girar.</span>
+    </p>}
   </div>;
 }
 

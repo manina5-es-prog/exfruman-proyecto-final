@@ -2,6 +2,11 @@
 
 Prototipo académico que compara la producción real de cajas de plátano con pronósticos ficticios por empacadora, año y semana ISO. Usa React, Vite y Three.js en el frontend, Node.js para la API y PostgreSQL como fuente configurable.
 
+## Demo pública
+
+- [Tablero en Render](https://exfruman-proyecto-final-api.onrender.com/).
+- [Swagger UI](https://exfruman-proyecto-final-api.onrender.com/docs).
+
 ## Ejecutar desde cero
 
 1. Instalar Node.js 22.12 o 24 con npm.
@@ -18,7 +23,7 @@ Ejecutar una vez 03_lectura.sql para crear un rol de grupo con permiso exclusivo
 ## Desplegar Render y Vercel
 
 - Render. El archivo `render.yaml` define el servicio Node.js y `/health`. Conectar el repositorio, desplegar y comprobar `/docs` y una consulta semanal. Configurar `DATABASE_URL` en Render si se desea habilitar PostgreSQL.
-- Vercel. Importar la raíz del proyecto como Vite. Antes de desplegar, sustituir el destino en `vercel.json` por el dominio del servicio Render que se acaba de verificar. La configuración inicial apunta al tablero histórico de la Tarea 5 para permitir una demostración con sus datos ficticios. Confirmar la consulta de la semana 36 desde el dominio de Vercel.
+- Vercel. Importar la raíz del proyecto como Vite. El destino de `vercel.json` apunta a la API pública de este proyecto en Render. Cambiarlo si se crea otro servicio. Confirmar la consulta de la semana 36 desde el dominio de Vercel.
 
 ## Resultados esperados
 
